@@ -1,0 +1,19 @@
+version: "3.9"
+services:
+    server:
+        build:
+            context: ./server
+            dockerfile: Dockerfile
+        ports:
+            - "3000:3000"
+        networks:
+            - mynet
+
+
+volumes:
+    data:
+
+networks:
+    mynet:
+        driver: bridge
+        name: my-shared-db-network
