@@ -1,9 +1,30 @@
 version: "3.9"
 services:
+    database:
+        image: postgres
+        restart: always
+        hostname: localhost
+        environment:
+            POSTGRES_DB: "saved-pictures-holder"
+            POSTGRES_USER: "postgres"
+            POSTGRES_PASSWORD: "my-super-secret-password"
+        ports:
+            - "5432:5432"
+        volumes:
+            - data:/var/lib/postgresql/data
+        networks:
+            - mynet
+
     server:
         build:
             context: ./server
             dockerfile: Dockerfile
+        environment:
+            DB_HOST: "database"
+            DB_PORT: "5432"
+            DB_NAME: "saved-pictures-holder"
+            DB_USER: "postgres"
+            DB_PASSWORD: "my-super-secret-password"
         ports:
             - "3000:3000"
         networks:
