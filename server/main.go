@@ -12,6 +12,12 @@ func main() {
 		panic(err)
 	}
 
+	defer db.Close()
+
+	if err = models.LoadTables(db); err != nil {
+		panic(err)
+	}
+
 	r := routes.SetupRouter(db)
 
 	r.Run(":3000")

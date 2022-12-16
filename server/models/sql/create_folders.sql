@@ -1,0 +1,11 @@
+CREATE TABLE IF NOT EXISTS "folders" (
+    "id" SERIAL PRIMARY KEY,
+    "user_id" INTEGER NOT NULL,
+    "name" VARCHAR(255) NOT NULL,
+    "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "deleted_at" TIMESTAMP
+
+    FOREIGN KEY ("user_id") REFERENCES "user" ("id")
+    PRIMARY KEY ("id")
+);
