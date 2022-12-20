@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	models "saved-pictures-holder/models"
 	"saved-pictures-holder/routes"
 )
@@ -20,5 +21,6 @@ func main() {
 
 	r := routes.SetupRouter(db)
 
+	fmt.Println("Server is running on port 3000")
 	r.Run(":3000")
 }
