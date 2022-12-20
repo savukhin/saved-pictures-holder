@@ -34,7 +34,6 @@ def test_auth():
     # Login with the user
 
     r = requests.post(TEST_URL + 'login', json={'username': test_username, 'password': test_password})
-    print(r.json())
 
     assert r.status_code == 200
 

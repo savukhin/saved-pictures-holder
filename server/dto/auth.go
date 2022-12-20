@@ -11,3 +11,13 @@ type Register struct {
 	ConfirmPassword string `json:"confirm_password" binding:"required,eqfield=Password"`
 	Email           string `json:"email" binding:"required,email"`
 }
+
+type Protected struct {
+	Token string `header:"Authorization" binding:"required,contains=Bearer"`
+	// Token string `binding:"required,header=Authorization,contains=Bearer"`
+}
+
+type CompressedUser struct {
+	ID       int    `json:"id"`
+	Username string `json:"username"`
+}

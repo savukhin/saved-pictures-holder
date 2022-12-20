@@ -2,7 +2,10 @@ module saved-pictures-holder
 
 go 1.17
 
-require github.com/gin-gonic/gin v1.8.1
+require (
+	github.com/fatih/structs v1.1.0
+	github.com/gin-gonic/gin v1.8.1
+)
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect

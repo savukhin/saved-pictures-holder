@@ -92,6 +92,36 @@ func Register(db *sqlx.DB) func(c *gin.Context) {
 
 		c.JSON(200, gin.H{
 			"message": "Successfully Registered!",
+			"id":      user.ID,
 		})
+	}
+}
+
+func Protected(db *sqlx.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		protected_query := &dto.Protected{}
+
+		if err := c.ShouldBindHeader(&protected_query); err != nil {
+			c.JSON(400, gin.H{
+				"message q": err.Error(),
+			})
+			return
+		}
+
+		user, err := utils.GetUserByJWT(db, protected_query.Token)
+
+		if err != nil {
+			c.JSON(400, gin.H{
+				"message w": err.Error(),
+			})
+			return
+		}
+
+		compressed_user := mappers.UserToCompressedUser(user)
+
+		result := utils.ConvertToMap(compressed_user)
+		result["message"] = "Successfully Authed!"
+
+		c.JSON(200, result)
 	}
 }

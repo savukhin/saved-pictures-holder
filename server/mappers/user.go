@@ -19,3 +19,10 @@ func UserRegisterToUser(user *dto.Register) *models.User {
 		Email:    user.Email,
 	}
 }
+
+func UserToCompressedUser(user *models.User) *dto.CompressedUser {
+	return &dto.CompressedUser{
+		ID:       user.ID,
+		Username: user.Username,
+	}
+}
