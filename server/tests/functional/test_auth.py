@@ -13,7 +13,6 @@ TEST_URL = BASE_URL + '/v1/api/'
     ('goodname1', 'passwordCorrect', 'correct@email.com', 'passwordCorrect', 200),
 ])
 def test_register(username, password, email, confirm_password, status_code):
-    time.sleep(5)
     """Test that registration works."""
     r = requests.post(TEST_URL + 'auth/register', json={'username': username, 'password': password, 'email': email, 'confirm_password': confirm_password})
 

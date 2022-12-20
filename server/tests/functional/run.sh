@@ -11,7 +11,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 copmose_dir=$DIR/../../../docker-compose.test.yml
 reload_copmose_each_test=false
-tests_list=( test_ping.py test_auth.py )
+tests_list=( test_ping.py test_auth.py test_folder.py )
 
 for i in "$@" ; do
     case $i in
