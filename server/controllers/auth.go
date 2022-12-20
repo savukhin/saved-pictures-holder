@@ -34,7 +34,7 @@ func Login(db *sqlx.DB) func(c *gin.Context) {
 
 		if err != nil {
 			c.JSON(400, gin.H{
-				"message": err.Error(),
+				"message s": err.Error(),
 			})
 			return
 		}
@@ -57,7 +57,7 @@ func Login(db *sqlx.DB) func(c *gin.Context) {
 
 		c.JSON(200, gin.H{
 			"message": "Successfully Logged In!",
-			"jwt":     jwt,
+			"token":   jwt,
 		})
 	}
 }
