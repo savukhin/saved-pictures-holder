@@ -6,8 +6,8 @@ type Login struct {
 }
 
 type Register struct {
-	Username        string `json:"username" binding:"required"`
-	Password        string `json:"password" binding:"required"`
-	ConfirmPassword string `json:"confirm_password" binding:"required"`
-	Email           string `json:"email" binding:"required"`
+	Username        string `json:"username" binding:"required,min=4,max=32,alphanum"`
+	Password        string `json:"password" binding:"required,min=8,max=32,alphanum,ascii"`
+	ConfirmPassword string `json:"confirm_password" binding:"required,eqfield=Password"`
+	Email           string `json:"email" binding:"required,email"`
 }
