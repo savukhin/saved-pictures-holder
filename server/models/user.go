@@ -27,6 +27,10 @@ func GetUserByID(db *sqlx.DB, id int) (*User, error) {
 		return nil, err
 	}
 
+	if user.DeletedAt.Valid {
+		return nil, sql.ErrNoRows
+	}
+
 	return &user, nil
 }
 
@@ -46,6 +50,16 @@ func (user *User) CreateUser(db *sqlx.DB) error {
 		QueryRow("INSERT INTO users (username, password, email) VALUES ($1, $2, $3) RETURNING id",
 			user.Username, user.Password, user.Email).
 		Scan(&user.ID)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (user *User) DeleteUser(db *sqlx.DB) error {
+	_, err := db.Exec("UPDATE users SET deleted_at = NOW() WHERE id = $1", user.ID)
 
 	if err != nil {
 		return err

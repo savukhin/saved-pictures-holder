@@ -1,10 +1,7 @@
 package functional_test
 
 import (
-	"net/url"
 	"testing"
-
-	"github.com/stretchr/testify/assert"
 )
 
 const (
@@ -14,17 +11,17 @@ const (
 
 func TestAuth(t *testing.T) {
 	// Test that authentication works.
-	test_username := "mytestusername"
-	test_password := "mytestpassword"
+	// test_username := "mytestusername"
+	// test_password := "mytestpassword"
 
 	// Create a user
 
-	var form url.Values
-	form = map[string][]string{"username": test_username, "password": test_password, "email": "mymail@gmail.com", "confirm_password": test_password}
+	// var form url.Values
+	// form = map[string][]string{"username": test_username, "password": test_password, "email": "mymail@gmail.com", "confirm_password": test_password}
 
 	// response, err := http.Post(API_URL+"register", "application/json", strings.NewReader(form.Encode()))
 
-	assert.Equal(t, 200, r.StatusCode)
+	// assert.Equal(t, 200, r.StatusCode)
 
 	// Login with the user
 

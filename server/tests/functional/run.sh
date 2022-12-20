@@ -80,7 +80,7 @@ echo "Running tests: [${tests_list[@]}]"
 
 # Run the tests
 for test in "${tests_list[@]}"; do
-    echo "Running test $test"
+    echo "- Running test $test"
 
     if [ $reload_copmose_each_test = true ]; then
         echo "$( run_docker_compose )"

@@ -15,7 +15,7 @@ TEST_URL = BASE_URL + '/v1/api/'
 def test_register(username, password, email, confirm_password, status_code):
     time.sleep(5)
     """Test that registration works."""
-    r = requests.post(TEST_URL + 'register', json={'username': username, 'password': password, 'email': email, 'confirm_password': confirm_password})
+    r = requests.post(TEST_URL + 'auth/register', json={'username': username, 'password': password, 'email': email, 'confirm_password': confirm_password})
 
     assert r.status_code == status_code
 
@@ -27,13 +27,13 @@ def test_auth():
 
     # Create a user
 
-    r = requests.post(TEST_URL + 'register', json={'username': test_username, 'password': test_password, 'email': 'mymail@gmail.com', 'confirm_password': test_password})
+    r = requests.post(TEST_URL + 'auth/register', json={'username': test_username, 'password': test_password, 'email': 'mymail@gmail.com', 'confirm_password': test_password})
 
     assert r.status_code == 200
 
     # Login with the user
 
-    r = requests.post(TEST_URL + 'login', json={'username': test_username, 'password': test_password})
+    r = requests.post(TEST_URL + 'auth/login', json={'username': test_username, 'password': test_password})
 
     assert r.status_code == 200
 
@@ -50,7 +50,7 @@ def test_auth():
 
     # Delete the user
 
-    r = requests.delete(TEST_URL + 'user', headers=headers)
+    r = requests.delete(TEST_URL + 'auth/delete-myself', headers=headers)
 
     assert r.status_code == 200
 

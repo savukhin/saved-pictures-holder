@@ -99,11 +99,11 @@ func Register(db *sqlx.DB) func(c *gin.Context) {
 
 func Protected(db *sqlx.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		protected_query := &dto.Protected{}
+		protected_query := &dto.TokenHeader{}
 
 		if err := c.ShouldBindHeader(&protected_query); err != nil {
-			c.JSON(400, gin.H{
-				"message q": err.Error(),
+			c.JSON(401, gin.H{
+				"message": err.Error(),
 			})
 			return
 		}
@@ -111,8 +111,8 @@ func Protected(db *sqlx.DB) gin.HandlerFunc {
 		user, err := utils.GetUserByJWT(db, protected_query.Token)
 
 		if err != nil {
-			c.JSON(400, gin.H{
-				"message w": err.Error(),
+			c.JSON(401, gin.H{
+				"message": err.Error(),
 			})
 			return
 		}
@@ -123,5 +123,38 @@ func Protected(db *sqlx.DB) gin.HandlerFunc {
 		result["message"] = "Successfully Authed!"
 
 		c.JSON(200, result)
+	}
+}
+
+func DeleteUser(db *sqlx.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		delete_user_query := &dto.TokenHeader{}
+
+		if err := c.ShouldBindHeader(&delete_user_query); err != nil {
+			c.JSON(400, gin.H{
+				"message": err.Error(),
+			})
+			return
+		}
+
+		user, err := utils.GetUserByJWT(db, delete_user_query.Token)
+
+		if err != nil {
+			c.JSON(400, gin.H{
+				"message": err.Error(),
+			})
+			return
+		}
+
+		if err := user.DeleteUser(db); err != nil {
+			c.JSON(400, gin.H{
+				"message": err.Error(),
+			})
+			return
+		}
+
+		c.JSON(200, gin.H{
+			"message": "Successfully Deleted User!",
+		})
 	}
 }

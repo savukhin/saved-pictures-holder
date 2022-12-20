@@ -15,8 +15,10 @@ func SetupRouter(db *sqlx.DB) *gin.Engine {
 	r.GET("/v1/api/protectedhealth", controllers.HelloWorld)
 	r.GET("/v1/api/protected", controllers.Protected(db))
 
-	r.POST("/v1/api/login", controllers.Login(db))
-	r.POST("/v1/api/register/", controllers.Register(db))
+	r.POST("/v1/api/auth/login", controllers.Login(db))
+	r.POST("/v1/api/auth/register/", controllers.Register(db))
+
+	r.DELETE("/v1/api/auth/delete-myself", controllers.DeleteUser(db))
 
 	return r
 }
