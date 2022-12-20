@@ -3,11 +3,15 @@
 trap "exit 1" TERM
 export TOP_PID=$$
 
+NC='\033[0m'
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 copmose_dir=$DIR/../../../docker-compose.test.yml
 reload_copmose_each_test=false
-tests_list=(test_auth.py)
+tests_list=( test_ping.py test_auth.py )
 
 for i in "$@" ; do
     case $i in
@@ -39,13 +43,13 @@ wait_healty() {
         fi
         sleep 1
     done
-    sleep 1
+    sleep 5
 }
 
 run_docker_compose() {
     echo "Starting server"
 
-    if $(docker-compose -f $copmose_dir up -d); then
+    if $(docker-compose -f $copmose_dir up --build -d); then
         wait_healty "server"
         echo "Server started"
     else
@@ -83,11 +87,11 @@ for test in "${tests_list[@]}"; do
     fi
 
     cmd=$( python3 -m pytest $DIR/$test --color=yes --tb=short )
-    echo "$cmd"
     if [ $? -eq 0 ]; then
-        echo "Test $test passed"
+        echo "${GREEN}Test $test passed${NC}"
     else
-        echo "Test $test failed with"
+        echo "${RED}Test $test failed${NC}"
+        echo "$cmd"
         passed=false
         break
     fi

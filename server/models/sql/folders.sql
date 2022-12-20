@@ -4,8 +4,7 @@ CREATE TABLE IF NOT EXISTS "folders" (
     "name" VARCHAR(255) NOT NULL,
     "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "deleted_at" TIMESTAMP
+    "deleted_at" TIMESTAMP,
 
-    FOREIGN KEY ("user_id") REFERENCES "user" ("id")
-    PRIMARY KEY ("id")
+    FOREIGN KEY ("user_id") REFERENCES "users" ("id")
 );

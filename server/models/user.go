@@ -35,19 +35,14 @@ func GetUserByUsername(db *sqlx.DB, username string) (*User, error) {
 }
 
 func (user *User) CreateUser(db *sqlx.DB) error {
-	result, err := db.Exec("INSERT INTO users (username, password, email) VALUES ($1, $2, $3) RETURNING id", user.Username, user.Password, user.Email)
+	err := db.
+		QueryRow("INSERT INTO users (username, password, email) VALUES ($1, $2, $3) RETURNING id",
+			user.Username, user.Password, user.Email).
+		Scan(&user.ID)
 
 	if err != nil {
 		return err
 	}
-
-	id, err := result.LastInsertId()
-
-	if err != nil {
-		return err
-	}
-
-	user.ID = int(id)
 
 	return nil
 }

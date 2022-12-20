@@ -28,8 +28,15 @@ func Connect() (*sqlx.DB, error) {
 }
 
 func LoadTables(db *sqlx.DB) error {
-	queries_folder := os.Getenv("QUERIES_FOLDER")
-	tables := []string{"user", "folders", "pictures"}
+	dir, err := os.Getwd()
+
+	if err != nil {
+		return err
+	}
+
+	queries_folder := fmt.Sprintf("%s/%s/%s", dir, "models", "sql")
+	// queries_folder := "./sql"
+	tables := []string{"users", "folders", "pictures"}
 
 	for _, table := range tables {
 		sql, err := os.ReadFile(fmt.Sprintf("%s/%s.sql", queries_folder, table))

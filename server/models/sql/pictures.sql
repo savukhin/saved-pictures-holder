@@ -8,9 +8,8 @@ CREATE TABLE IF NOT EXISTS "pictures" (
 
     "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "deleted_at" TIMESTAMP
+    "deleted_at" TIMESTAMP,
 
-    FOREIGN KEY ("user_id") REFERENCES "user" ("id")
-    FOREIGN KEY ("folder_id") REFERENCES "folder" ("id")
-    PRIMARY KEY ("id")
+    FOREIGN KEY ("user_id") REFERENCES "users" ("id"),
+    FOREIGN KEY ("folder_id") REFERENCES "folders" ("id")
 );
