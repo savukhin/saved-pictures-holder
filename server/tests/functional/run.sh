@@ -43,7 +43,7 @@ wait_healty() {
         fi
         sleep 1
     done
-    sleep 5
+    sleep 6
 }
 
 run_docker_compose() {

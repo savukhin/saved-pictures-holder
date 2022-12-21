@@ -14,6 +14,8 @@ services:
             - mynet
 
     server:
+        depends_on:
+            - database
         build:
             context: ./server
             dockerfile: Dockerfile

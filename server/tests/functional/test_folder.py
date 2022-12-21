@@ -29,7 +29,7 @@ def user_headers():
 def test_create_folder(user_headers, folder_name, status_code):
     """Test that registration works."""
     r = requests.post(TEST_URL + 'folders/create', json={'name': folder_name}, headers=user_headers)
-    print(r.json())
+    print(r.text)
 
     assert r.status_code == status_code
 
