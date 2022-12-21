@@ -4,6 +4,8 @@ import (
 	"saved-pictures-holder/dto"
 	"saved-pictures-holder/mappers"
 	"saved-pictures-holder/models"
+	"saved-pictures-holder/utils"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"
@@ -38,9 +40,46 @@ func CreateFolder(db *sqlx.DB) gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(200, gin.H{
-			"message": "Folder created",
-		})
+		result := utils.ConvertToMap(folder)
+		result["message"] = "Folder created"
 
+		c.JSON(200, result)
+
+	}
+}
+
+func GetFolderByID(db *sqlx.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		folder_id, err := strconv.Atoi(c.Param("id"))
+
+		if err != nil {
+			c.JSON(400, gin.H{
+				"message": err.Error(),
+			})
+			return
+		}
+
+		folder, err := models.GetFolderByID(db, folder_id)
+
+		if err != nil {
+			c.JSON(400, gin.H{
+				"message": err.Error(),
+			})
+			return
+		}
+
+		user, _ := extractUser(c)
+
+		if folder.UserID != user.ID {
+			c.JSON(403, gin.H{
+				"message": "You are not allowed to access this folder",
+			})
+			return
+		}
+
+		result := utils.ConvertToMap(folder)
+		result["message"] = "Folder found"
+
+		c.JSON(200, result)
 	}
 }

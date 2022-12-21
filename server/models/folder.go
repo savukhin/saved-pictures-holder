@@ -26,3 +26,15 @@ func (folder *Folder) CreateFolder(db *sqlx.DB) error {
 
 	return nil
 }
+
+func GetFolderByID(db *sqlx.DB, id int) (*Folder, error) {
+	folder := &Folder{}
+
+	err := db.Get(folder, "SELECT * FROM folders WHERE id = $1", id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return folder, nil
+}
