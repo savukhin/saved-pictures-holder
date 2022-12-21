@@ -46,11 +46,24 @@ wait_healty() {
     sleep 6
 }
 
+wait_server() {
+    echo "Waiting for server to start"
+
+    while true; do
+        if $(curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/v1/api/health | grep -q 200); then
+            echo "Server is up"
+            break
+        fi
+        sleep 1
+    done
+}
+
 run_docker_compose() {
     echo "Starting server"
 
     if $(docker-compose -f $copmose_dir up --build -d); then
-        wait_healty "server"
+        # wait_healty "server"
+        wait_server
         echo "Server started"
     else
         echo "Server failed to start"

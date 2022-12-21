@@ -25,6 +25,7 @@ def user_headers():
     ('Для важных переговоров', 200),
     ('For my only', 200),
     ('Style', 200),
+    ('Very long name for my folder (>255)' + 'a'*255, 400),
 ])
 def test_create_folder(user_headers, folder_name, status_code):
     """Test that registration works."""
