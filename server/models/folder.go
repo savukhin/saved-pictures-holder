@@ -30,7 +30,7 @@ func (folder *Folder) CreateFolder(db *sqlx.DB) error {
 func GetFolderByID(db *sqlx.DB, id int) (*Folder, error) {
 	folder := &Folder{}
 
-	err := db.Get(folder, "SELECT * FROM folders WHERE id = $1", id)
+	err := db.Get(folder, "SELECT * FROM folders WHERE id = $1 ", id)
 
 	if err != nil {
 		return nil, err
@@ -41,11 +41,21 @@ func GetFolderByID(db *sqlx.DB, id int) (*Folder, error) {
 
 func GetFolders(db *sqlx.DB, user_id int) ([]*Folder, error) {
 	folders := []*Folder{}
-	err := db.Select(&folders, "SELECT * FROM folders WHERE user_id = $1", user_id)
+	err := db.Select(&folders, "SELECT * FROM folders WHERE user_id = $1 AND deleted_at IS NULL ", user_id)
 
 	if err != nil {
 		return nil, err
 	}
 
 	return folders, nil
+}
+
+func (folder *Folder) DeleteFolder(db *sqlx.DB) error {
+	_, err := db.Exec("UPDATE folders SET deleted_at = NOW() WHERE id = $1", folder.ID)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
