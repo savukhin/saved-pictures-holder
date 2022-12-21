@@ -13,7 +13,6 @@ def user1_headers():
     test_password = 'mytestpasswordforfolder'
 
     r = requests.post(TEST_URL + 'auth/register', json={'username': test_username, 'password': test_password, 'email': 'mymail1@gmail.com', 'confirm_password': test_password})
-    print(r.json())
     assert r.status_code == 200
 
     r = requests.post(TEST_URL + 'auth/login', json={'username': test_username, 'password': test_password})
