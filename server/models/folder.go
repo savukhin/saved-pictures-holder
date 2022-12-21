@@ -50,6 +50,16 @@ func GetFolders(db *sqlx.DB, user_id int) ([]*Folder, error) {
 	return folders, nil
 }
 
+func (folder *Folder) UpdateFolder(db *sqlx.DB) error {
+	_, err := db.Exec("UPDATE folders SET name = $1 WHERE id = $2", folder.Name, folder.ID)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (folder *Folder) DeleteFolder(db *sqlx.DB) error {
 	_, err := db.Exec("UPDATE folders SET deleted_at = NOW() WHERE id = $1", folder.ID)
 

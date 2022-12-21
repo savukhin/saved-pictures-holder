@@ -24,6 +24,7 @@ func SetupRouter(db *sqlx.DB) *gin.Engine {
 	r.POST("/v1/api/folders/create", middleware.AuthRequired(db), controllers.CreateFolder(db))
 	r.GET("/v1/api/folders/get/all", middleware.AuthRequired(db), controllers.GetFolders(db))
 	r.GET("/v1/api/folders/get/:id", middleware.AuthRequired(db), controllers.GetFolderByID(db))
+	r.PUT("/v1/api/folders/update/:id", middleware.AuthRequired(db), controllers.UpdateFolder(db))
 	r.DELETE("/v1/api/folders/delete/:id", middleware.AuthRequired(db), controllers.DeleteFolder(db))
 
 	return r

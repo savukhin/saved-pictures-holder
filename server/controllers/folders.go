@@ -117,6 +117,66 @@ func GetFolders(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
+func UpdateFolder(db *sqlx.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		folder_query := &dto.UpdateFolderQuery{}
+		folder_id, err := strconv.Atoi(c.Param("id"))
+
+		if err != nil {
+			c.JSON(400, gin.H{
+				"message": err.Error(),
+			})
+			return
+		}
+
+		if err := c.ShouldBindJSON(folder_query); err != nil {
+			c.JSON(400, gin.H{
+				"message": err.Error(),
+			})
+			return
+		}
+
+		folder, err := models.GetFolderByID(db, folder_id)
+
+		if err != nil {
+			c.JSON(404, gin.H{
+				"message": err.Error(),
+			})
+			return
+		}
+
+		if folder.DeletedAt.Valid {
+			c.JSON(410, gin.H{
+				"message": "Folder has been deleted",
+			})
+			return
+		}
+
+		user, _ := extractUser(c)
+
+		if folder.UserID != user.ID {
+			c.JSON(403, gin.H{
+				"message": "You are not allowed to access this folder",
+			})
+			return
+		}
+
+		folder.Name = folder_query.Name
+
+		if err := folder.UpdateFolder(db); err != nil {
+			c.JSON(400, gin.H{
+				"message": err.Error(),
+			})
+			return
+		}
+
+		result := utils.ConvertToMap(folder)
+		result["message"] = "Folder updated"
+
+		c.JSON(200, result)
+	}
+}
+
 func DeleteFolder(db *sqlx.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		folder_id, err := strconv.Atoi(c.Param("id"))
@@ -133,6 +193,13 @@ func DeleteFolder(db *sqlx.DB) gin.HandlerFunc {
 		if err != nil {
 			c.JSON(404, gin.H{
 				"message": err.Error(),
+			})
+			return
+		}
+
+		if folder.DeletedAt.Valid {
+			c.JSON(410, gin.H{
+				"message": "Folder has been deleted",
 			})
 			return
 		}
