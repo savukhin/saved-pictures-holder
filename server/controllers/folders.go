@@ -83,3 +83,29 @@ func GetFolderByID(db *sqlx.DB) gin.HandlerFunc {
 		c.JSON(200, result)
 	}
 }
+
+func GetFolders(db *sqlx.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		user, _ := extractUser(c)
+
+		folders, err := models.GetFolders(db, user.ID)
+
+		if err != nil {
+			c.JSON(400, gin.H{
+				"message": err.Error(),
+			})
+			return
+		}
+
+		result := map[string]interface{}{
+			"message": "Folders found",
+			"folders": make([]map[string]interface{}, 0),
+		}
+
+		for _, folder := range folders {
+			result["folders"] = append(result["folders"].([]map[string]interface{}), utils.ConvertToMap(folder))
+		}
+
+		c.JSON(200, result)
+	}
+}

@@ -56,12 +56,16 @@ def test_get_folders(user1_headers, user2_headers):
     r = requests.post(TEST_URL + 'folders/create', json={'name': "My private folder"}, headers=user1_headers)
     assert r.status_code == 200
 
-    print(r.json())
+    folder_id = r.json()['ID']
 
-    folder_id = str(r.json()['ID'])
-
-    r = requests.post(TEST_URL + 'folders/get/' + folder_id, headers=user1_headers)
+    r = requests.post(TEST_URL + 'folders/get/' + str(folder_id), headers=user1_headers)
     assert r.status_code == 200
 
-    r = requests.post(TEST_URL + 'folders/get/' + folder_id, headers=user2_headers)
+    r = requests.post(TEST_URL + 'folders/get/' + str(folder_id), headers=user2_headers)
     assert r.status_code == 403
+
+    r = requests.post(TEST_URL + 'folders/get/all', headers=user1_headers)
+    assert r.status_code == 200
+    assert len(r.json()["folders"]) == 4
+    assert r.json()["folders"][3]['ID'] == folder_id
+    assert r.json()["folders"][3]['Name'] == "My private folder"

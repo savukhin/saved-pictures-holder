@@ -38,3 +38,14 @@ func GetFolderByID(db *sqlx.DB, id int) (*Folder, error) {
 
 	return folder, nil
 }
+
+func GetFolders(db *sqlx.DB, user_id int) ([]*Folder, error) {
+	folders := []*Folder{}
+	err := db.Select(&folders, "SELECT * FROM folders WHERE user_id = $1", user_id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return folders, nil
+}
