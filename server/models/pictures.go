@@ -31,7 +31,7 @@ func (p *Picture) CreatePicture(db *sqlx.DB) error {
 func GetPictures(db *sqlx.DB, folder_id int, offset int, limit int) ([]Picture, error) {
 	pictures := []Picture{}
 
-	err := db.Select(&pictures, "SELECT * FROM pictures WHERE folder_id = $1 LIMIT $2 OFFSET $3", folder_id, limit, offset)
+	err := db.Select(&pictures, "SELECT * FROM pictures WHERE folder_id = $1 AND deleted_at IS NULL ORDER BY id DESC LIMIT $2 OFFSET $3", folder_id, limit, offset)
 
 	return pictures, err
 }
@@ -46,6 +46,12 @@ func GetPictureByID(db *sqlx.DB, id int) (Picture, error) {
 
 func (p *Picture) UpdatePicture(db *sqlx.DB) error {
 	_, err := db.Exec("UPDATE pictures SET title = $1, description = $2, updated_at = now()  WHERE id = $3", p.Title, p.Description, p.ID)
+
+	return err
+}
+
+func (p *Picture) DeletePicture(db *sqlx.DB) error {
+	_, err := db.Exec("UPDATE pictures SET deleted_at = now() WHERE id = $1", p.ID)
 
 	return err
 }

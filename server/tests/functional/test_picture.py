@@ -124,3 +124,24 @@ def test_update_picture(some_folder_id, user1_headers, user2_headers):
     assert r.status_code == 200
     assert r.json()['title'] == 'title 1'
     assert r.json()['description'] == 'description 1'
+
+
+def test_delete_picture(some_folder_id, user1_headers, user2_headers, sample_picture_1):
+    folder_id = str(some_folder_id)
+
+    r = requests.post(TEST_URL + 'folders/' + folder_id + '/create-picture', files=sample_picture_1, headers=user1_headers)
+    assert r.status_code == 200
+    print(r.text)
+    picture_id = str(r.json()['id'])
+
+    r = requests.get(TEST_URL + 'picture/' + picture_id, headers=user1_headers)
+    assert r.status_code == 200
+
+    r = requests.delete(TEST_URL + 'picture/' + picture_id, headers=user2_headers)
+    assert r.status_code == 403
+
+    r = requests.delete(TEST_URL + 'picture/' + picture_id, headers=user1_headers)
+    assert r.status_code == 200
+
+    r = requests.get(TEST_URL + 'picture/' + picture_id, headers=user1_headers)
+    assert r.status_code == 410

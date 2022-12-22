@@ -50,6 +50,7 @@ func SetupRouter(db *sqlx.DB) *gin.Engine {
 
 	r.GET("/v1/api/picture/:id", middleware.AuthRequired(db), controllers.GetPictureInfo(db))
 	r.POST("/v1/api/picture/:id/update", middleware.AuthRequired(db), controllers.UpdatePicture(db))
+	r.DELETE("/v1/api/picture/:id", middleware.AuthRequired(db), controllers.DeletePicture(db))
 
 	return r
 }

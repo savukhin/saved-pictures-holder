@@ -72,6 +72,7 @@ func CreatePicture(db *sqlx.DB) gin.HandlerFunc {
 		}
 
 		c.JSON(200, gin.H{
+			"id":      picture_model.ID,
 			"message": "Picture created",
 		})
 	}
@@ -210,6 +211,13 @@ func GetPictureInfo(db *sqlx.DB) gin.HandlerFunc {
 			return
 		}
 
+		if picture_model.DeletedAt.Valid {
+			c.JSON(410, gin.H{
+				"message": "Picture deleted",
+			})
+			return
+		}
+
 		user, err := extractUser(c)
 
 		if err != nil {
@@ -237,5 +245,54 @@ func GetPictureInfo(db *sqlx.DB) gin.HandlerFunc {
 		}
 
 		c.JSON(200, result)
+	}
+}
+
+func DeletePicture(db *sqlx.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		picture_id, err := strconv.Atoi(c.Param("id"))
+
+		if err != nil {
+			c.JSON(400, gin.H{
+				"message": err.Error(),
+			})
+			return
+		}
+
+		picture_model, err := models.GetPictureByID(db, picture_id)
+
+		if err != nil {
+			c.JSON(400, gin.H{
+				"message": err.Error(),
+			})
+			return
+		}
+
+		user, err := extractUser(c)
+
+		if err != nil {
+			c.JSON(403, gin.H{
+				"message": "Forbidden",
+			})
+			return
+		}
+
+		if picture_model.UserID != user.ID {
+			c.JSON(403, gin.H{
+				"message": "Forbidden",
+			})
+			return
+		}
+
+		if err := picture_model.DeletePicture(db); err != nil {
+			c.JSON(400, gin.H{
+				"message": err.Error(),
+			})
+			return
+		}
+
+		c.JSON(200, gin.H{
+			"message": "Picture deleted",
+		})
 	}
 }
