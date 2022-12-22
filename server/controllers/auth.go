@@ -119,7 +119,15 @@ func Protected(db *sqlx.DB) gin.HandlerFunc {
 
 		compressed_user := mappers.UserToCompressedUser(user)
 
-		result := utils.ConvertToMap(compressed_user)
+		result, err := utils.ConvertToMap(compressed_user)
+
+		if err != nil {
+			c.JSON(500, gin.H{
+				"message": err.Error(),
+			})
+			return
+		}
+
 		result["message"] = "Successfully Authed!"
 
 		c.JSON(200, result)

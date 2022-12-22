@@ -46,6 +46,7 @@ func SetupRouter(db *sqlx.DB) *gin.Engine {
 	r.DELETE("/v1/api/folders/delete/:id", middleware.AuthRequired(db), controllers.DeleteFolder(db))
 
 	r.POST("/v1/api/folders/:id/create-picture/", middleware.AuthRequired(db), controllers.CreatePicture(db))
+	r.GET("/v1/api/folders/:id/pictures/", middleware.AuthRequired(db), controllers.GetPictures(db)) // Params: offset, limit
 
 	return r
 }

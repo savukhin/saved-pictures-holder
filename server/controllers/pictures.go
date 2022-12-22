@@ -3,6 +3,8 @@ package controllers
 import (
 	"os"
 	"saved-pictures-holder/mappers"
+	"saved-pictures-holder/models"
+	"saved-pictures-holder/utils"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -71,5 +73,58 @@ func CreatePicture(db *sqlx.DB) gin.HandlerFunc {
 		c.JSON(200, gin.H{
 			"message": "Picture created",
 		})
+	}
+}
+
+func GetPictures(db *sqlx.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		folder_id, err := strconv.Atoi(c.Param("id"))
+
+		if err != nil {
+			c.JSON(400, gin.H{
+				"message": err.Error(),
+			})
+			return
+		}
+
+		offset, err := strconv.Atoi(c.Query("offset"))
+
+		if err != nil {
+			c.JSON(400, gin.H{
+				"message": err.Error(),
+			})
+			return
+		}
+
+		limit, err := strconv.Atoi(c.Query("limit"))
+
+		if err != nil {
+			c.JSON(400, gin.H{
+				"message": err.Error(),
+			})
+			return
+		}
+
+		pictures, err := models.GetPictures(db, folder_id, offset, limit)
+
+		if err != nil {
+			c.JSON(400, gin.H{
+				"message": err.Error(),
+			})
+			return
+		}
+
+		pictures_dto := mappers.ToPictureResponse(pictures, offset, limit)
+		result, err := utils.ConvertToMap(pictures_dto)
+		// result, err := json.Marshal(pictures_dto)
+
+		if err != nil {
+			c.JSON(500, gin.H{
+				"message": err.Error(),
+			})
+			return
+		}
+
+		c.JSON(200, result)
 	}
 }

@@ -40,7 +40,7 @@ func CreateFolder(db *sqlx.DB) gin.HandlerFunc {
 			return
 		}
 
-		result := utils.ConvertToMap(folder)
+		result, _ := utils.ConvertToMap(folder)
 		result["message"] = "Folder created"
 
 		c.JSON(200, result)
@@ -84,7 +84,7 @@ func GetFolderByID(db *sqlx.DB) gin.HandlerFunc {
 			return
 		}
 
-		result := utils.ConvertToMap(folder)
+		result, _ := utils.ConvertToMap(folder)
 		result["message"] = "Folder found"
 
 		c.JSON(200, result)
@@ -110,7 +110,8 @@ func GetFolders(db *sqlx.DB) gin.HandlerFunc {
 		}
 
 		for _, folder := range folders {
-			result["folders"] = append(result["folders"].([]map[string]interface{}), utils.ConvertToMap(folder))
+			converted, _ := utils.ConvertToMap(folder)
+			result["folders"] = append(result["folders"].([]map[string]interface{}), converted)
 		}
 
 		c.JSON(200, result)
@@ -170,7 +171,15 @@ func UpdateFolder(db *sqlx.DB) gin.HandlerFunc {
 			return
 		}
 
-		result := utils.ConvertToMap(folder)
+		result, err := utils.ConvertToMap(folder)
+
+		if err != nil {
+			c.JSON(500, gin.H{
+				"message": err.Error(),
+			})
+			return
+		}
+
 		result["message"] = "Folder updated"
 
 		c.JSON(200, result)
@@ -220,7 +229,7 @@ func DeleteFolder(db *sqlx.DB) gin.HandlerFunc {
 			return
 		}
 
-		result := utils.ConvertToMap(folder)
+		result, _ := utils.ConvertToMap(folder)
 		result["message"] = "Folder deleted"
 
 		c.JSON(200, result)

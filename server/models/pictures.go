@@ -27,3 +27,11 @@ func (p *Picture) CreatePicture(db *sqlx.DB) error {
 
 	return err
 }
+
+func GetPictures(db *sqlx.DB, folder_id int, offset int, limit int) ([]Picture, error) {
+	pictures := []Picture{}
+
+	err := db.Select(&pictures, "SELECT * FROM pictures WHERE folder_id = $1 LIMIT $2 OFFSET $3", folder_id, limit, offset)
+
+	return pictures, err
+}

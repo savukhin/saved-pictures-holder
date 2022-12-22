@@ -77,8 +77,8 @@ def test_get_folders(user1_headers, user2_headers):
     r = requests.get(TEST_URL + 'folders/get/all', headers=user1_headers)
     assert r.status_code == 200
     assert len(r.json()["folders"]) == init_count + 1
-    assert r.json()["folders"][3]['ID'] == folder_id
-    assert r.json()["folders"][3]['Name'] == "My private folder"
+    assert r.json()["folders"][3]['id'] == folder_id
+    assert r.json()["folders"][3]['name'] == "My private folder"
 
     r = requests.delete(TEST_URL + 'folders/delete/' + str(folder_id), headers=user2_headers)
     assert r.status_code == 403
@@ -100,23 +100,23 @@ def test_get_folders(user1_headers, user2_headers):
 def test_folder_update(user1_headers):
     r = requests.post(TEST_URL + 'folders/create', json={'name': "Name 1"}, headers=user1_headers)
     assert r.status_code == 200
-    assert r.json()["Name"] == "Name 1"
+    assert r.json()["name"] == "Name 1"
 
-    folder_id = r.json()["ID"]
+    folder_id = r.json()["id"]
 
     r = requests.put(TEST_URL + 'folders/update/' + str(folder_id), json={'name': "Name 2"}, headers=user1_headers)
     assert r.status_code == 200
 
     r = requests.get(TEST_URL + 'folders/get/' + str(folder_id), headers=user1_headers)
     assert r.status_code == 200
-    assert r.json()["Name"] == "Name 2"
+    assert r.json()["name"] == "Name 2"
 
     r = requests.put(TEST_URL + 'folders/update/' + str(folder_id), json={'name': "Name 3"}, headers=user1_headers)
     assert r.status_code == 200
 
     r = requests.get(TEST_URL + 'folders/get/' + str(folder_id), headers=user1_headers)
     assert r.status_code == 200
-    assert r.json()["Name"] == "Name 3"
+    assert r.json()["name"] == "Name 3"
 
     r = requests.delete(TEST_URL + 'folders/delete/' + str(folder_id), headers=user1_headers)
     assert r.status_code == 200
@@ -131,9 +131,9 @@ def test_folder_update(user1_headers):
 def test_folder_delete(user1_headers):
     r = requests.post(TEST_URL + 'folders/create', json={'name': "Name 1"}, headers=user1_headers)
     assert r.status_code == 200
-    assert r.json()["Name"] == "Name 1"
+    assert r.json()["name"] == "Name 1"
 
-    folder_id = r.json()["ID"]
+    folder_id = r.json()["id"]
 
     r = requests.delete(TEST_URL + 'folders/delete/' + str(folder_id), headers=user1_headers)
     assert r.status_code == 200
