@@ -44,7 +44,7 @@ def user2_headers():
     ('Very long name for my folder (>255)' + 'a'*255, 400),
 ])
 def test_create_folder(user1_headers, folder_name, status_code):
-    r = requests.post(TEST_URL + 'folders/create', json={'name': folder_name}, headers=user1_headers)
+    r = requests.post(TEST_URL + 'folder/create', json={'name': folder_name}, headers=user1_headers)
 
     assert r.status_code == status_code
 
@@ -53,96 +53,96 @@ def test_get_folders(user1_headers, user2_headers):
     folder_id = 4
     init_count = 3
 
-    r = requests.get(TEST_URL + 'folders/get/all', headers=user1_headers)
+    r = requests.get(TEST_URL + 'folder/all', headers=user1_headers)
     assert r.status_code == 200
     assert len(r.json()["folders"]) == init_count
 
-    r = requests.get(TEST_URL + 'folders/get/' + str(folder_id), headers=user1_headers)
+    r = requests.get(TEST_URL + 'folder/' + str(folder_id), headers=user1_headers)
     assert r.status_code == 404
 
-    r = requests.get(TEST_URL + 'folders/get/' + str(folder_id), headers=user2_headers)
+    r = requests.get(TEST_URL + 'folder/' + str(folder_id), headers=user2_headers)
     assert r.status_code == 404
 
     """Create a folder for testing"""
 
-    r = requests.post(TEST_URL + 'folders/create', json={'name': "My private folder"}, headers=user1_headers)
+    r = requests.post(TEST_URL + 'folder/create', json={'name': "My private folder"}, headers=user1_headers)
     assert r.status_code == 200
 
-    r = requests.get(TEST_URL + 'folders/get/' + str(folder_id), headers=user1_headers)
+    r = requests.get(TEST_URL + 'folder/' + str(folder_id), headers=user1_headers)
     assert r.status_code == 200
 
-    r = requests.get(TEST_URL + 'folders/get/' + str(folder_id), headers=user2_headers)
+    r = requests.get(TEST_URL + 'folder/' + str(folder_id), headers=user2_headers)
     assert r.status_code == 403
 
-    r = requests.get(TEST_URL + 'folders/get/all', headers=user1_headers)
+    r = requests.get(TEST_URL + 'folder/all', headers=user1_headers)
     assert r.status_code == 200
     assert len(r.json()["folders"]) == init_count + 1
     assert r.json()["folders"][3]['id'] == folder_id
     assert r.json()["folders"][3]['name'] == "My private folder"
 
-    r = requests.delete(TEST_URL + 'folders/delete/' + str(folder_id), headers=user2_headers)
+    r = requests.delete(TEST_URL + 'folder/' + str(folder_id), headers=user2_headers)
     assert r.status_code == 403
 
-    r = requests.delete(TEST_URL + 'folders/delete/' + str(folder_id), headers=user1_headers)
+    r = requests.delete(TEST_URL + 'folder/' + str(folder_id), headers=user1_headers)
     print(r.text)
     assert r.status_code == 200
 
-    r = requests.get(TEST_URL + 'folders/get/' + str(folder_id), headers=user1_headers)
+    r = requests.get(TEST_URL + 'folder/' + str(folder_id), headers=user1_headers)
     assert r.status_code == 410
 
-    r = requests.get(TEST_URL + 'folders/get/' + str(folder_id), headers=user2_headers)
+    r = requests.get(TEST_URL + 'folder/' + str(folder_id), headers=user2_headers)
     assert r.status_code == 403
 
-    r = requests.get(TEST_URL + 'folders/get/all', headers=user1_headers)
+    r = requests.get(TEST_URL + 'folder/all', headers=user1_headers)
     assert r.status_code == 200
     assert len(r.json()["folders"]) == init_count
 
 def test_folder_update(user1_headers):
-    r = requests.post(TEST_URL + 'folders/create', json={'name': "Name 1"}, headers=user1_headers)
+    r = requests.post(TEST_URL + 'folder/create', json={'name': "Name 1"}, headers=user1_headers)
     assert r.status_code == 200
     assert r.json()["name"] == "Name 1"
 
     folder_id = r.json()["id"]
 
-    r = requests.put(TEST_URL + 'folders/update/' + str(folder_id), json={'name': "Name 2"}, headers=user1_headers)
+    r = requests.put(TEST_URL + 'folder/' + str(folder_id) + '/update', json={'name': "Name 2"}, headers=user1_headers)
     assert r.status_code == 200
 
-    r = requests.get(TEST_URL + 'folders/get/' + str(folder_id), headers=user1_headers)
+    r = requests.get(TEST_URL + 'folder/' + str(folder_id), headers=user1_headers)
     assert r.status_code == 200
     assert r.json()["name"] == "Name 2"
 
-    r = requests.put(TEST_URL + 'folders/update/' + str(folder_id), json={'name': "Name 3"}, headers=user1_headers)
+    r = requests.put(TEST_URL + 'folder/' + str(folder_id) + '/update', json={'name': "Name 3"}, headers=user1_headers)
     assert r.status_code == 200
 
-    r = requests.get(TEST_URL + 'folders/get/' + str(folder_id), headers=user1_headers)
+    r = requests.get(TEST_URL + 'folder/' + str(folder_id), headers=user1_headers)
     assert r.status_code == 200
     assert r.json()["name"] == "Name 3"
 
-    r = requests.delete(TEST_URL + 'folders/delete/' + str(folder_id), headers=user1_headers)
+    r = requests.delete(TEST_URL + 'folder/' + str(folder_id), headers=user1_headers)
     assert r.status_code == 200
 
-    r = requests.put(TEST_URL + 'folders/update/' + str(folder_id), json={'name': "Name 4"}, headers=user1_headers)
+    r = requests.put(TEST_URL + 'folder/' + str(folder_id) + '/update', json={'name': "Name 4"}, headers=user1_headers)
     assert r.status_code == 410
 
-    r = requests.get(TEST_URL + 'folders/get/' + str(folder_id), headers=user1_headers)
+    r = requests.get(TEST_URL + 'folder/' + str(folder_id), headers=user1_headers)
     assert r.status_code == 410
 
 
 def test_folder_delete(user1_headers):
-    r = requests.post(TEST_URL + 'folders/create', json={'name': "Name 1"}, headers=user1_headers)
+    r = requests.post(TEST_URL + 'folder/create', json={'name': "Name 1"}, headers=user1_headers)
     assert r.status_code == 200
     assert r.json()["name"] == "Name 1"
 
     folder_id = r.json()["id"]
 
-    r = requests.delete(TEST_URL + 'folders/delete/' + str(folder_id), headers=user1_headers)
+    r = requests.delete(TEST_URL + 'folder/' + str(folder_id), headers=user1_headers)
     assert r.status_code == 200
 
-    r = requests.get(TEST_URL + 'folders/get/' + str(folder_id), headers=user1_headers)
+    r = requests.get(TEST_URL + 'folder/' + str(folder_id), headers=user1_headers)
     assert r.status_code == 410
 
-    r = requests.delete(TEST_URL + 'folders/delete/' + str(folder_id), headers=user1_headers)
+    r = requests.delete(TEST_URL + 'folder/' + str(folder_id), headers=user1_headers)
     assert r.status_code == 410
 
-    r = requests.get(TEST_URL + 'folders/get/' + str(folder_id), headers=user1_headers)
+    r = requests.get(TEST_URL + 'folder/' + str(folder_id), headers=user1_headers)
     assert r.status_code == 410

@@ -39,17 +39,17 @@ func SetupRouter(db *sqlx.DB) *gin.Engine {
 
 	r.DELETE("/v1/api/auth/delete-myself", controllers.DeleteUser(db))
 
-	r.POST("/v1/api/folders/create", middleware.AuthRequired(db), controllers.CreateFolder(db))
-	r.GET("/v1/api/folders/get/all", middleware.AuthRequired(db), controllers.GetFolders(db))
-	r.GET("/v1/api/folders/get/:id", middleware.AuthRequired(db), controllers.GetFolderByID(db))
-	r.PUT("/v1/api/folders/update/:id", middleware.AuthRequired(db), controllers.UpdateFolder(db))
-	r.DELETE("/v1/api/folders/delete/:id", middleware.AuthRequired(db), controllers.DeleteFolder(db))
+	r.POST("/v1/api/folder/create", middleware.AuthRequired(db), controllers.CreateFolder(db))
+	r.GET("/v1/api/folder/all", middleware.AuthRequired(db), controllers.GetFolders(db))
+	r.GET("/v1/api/folder/:id", middleware.AuthRequired(db), controllers.GetFolderByID(db))
+	r.PUT("/v1/api/folder/:id/update", middleware.AuthRequired(db), controllers.UpdateFolder(db))
+	r.DELETE("/v1/api/folder/:id", middleware.AuthRequired(db), controllers.DeleteFolder(db))
 
-	r.POST("/v1/api/folders/:id/create-picture/", middleware.AuthRequired(db), controllers.CreatePicture(db))
-	r.GET("/v1/api/folders/:id/pictures/", middleware.AuthRequired(db), controllers.GetPictures(db)) // Params: offset, limit
+	r.POST("/v1/api/folder/:id/create-picture/", middleware.AuthRequired(db), controllers.CreatePicture(db))
+	r.GET("/v1/api/folder/:id/pictures/", middleware.AuthRequired(db), controllers.GetPictures(db)) // Params: offset, limit
 
 	r.GET("/v1/api/picture/:id", middleware.AuthRequired(db), controllers.GetPictureInfo(db))
-	r.POST("/v1/api/picture/:id/update", middleware.AuthRequired(db), controllers.UpdatePicture(db))
+	r.PUT("/v1/api/picture/:id/update", middleware.AuthRequired(db), controllers.UpdatePicture(db))
 	r.DELETE("/v1/api/picture/:id", middleware.AuthRequired(db), controllers.DeletePicture(db))
 
 	return r

@@ -54,7 +54,7 @@ def sample_picture_3():
 
 @pytest.fixture(scope='session')
 def some_folder_id(user1_headers):
-    r = requests.post(TEST_URL + 'folders/create', json={'name': 'mytestfolderforpicture'}, headers=user1_headers)
+    r = requests.post(TEST_URL + 'folder/create', json={'name': 'mytestfolderforpicture'}, headers=user1_headers)
     assert r.status_code == 200
 
     folder_id = r.json()['id']
@@ -63,53 +63,53 @@ def some_folder_id(user1_headers):
 def test_create_picture(some_folder_id, user1_headers, sample_picture_1, sample_picture_2, sample_picture_3):
     folder_id = str(some_folder_id)
 
-    r = requests.post(TEST_URL + 'folders/' + folder_id + '/create-picture', files=sample_picture_1)
+    r = requests.post(TEST_URL + 'folder/' + folder_id + '/create-picture', files=sample_picture_1)
     assert r.status_code == 403
 
-    r = requests.post(TEST_URL + 'folders/' + folder_id + '/create-picture', files=sample_picture_1, headers=user1_headers)
+    r = requests.post(TEST_URL + 'folder/' + folder_id + '/create-picture', files=sample_picture_1, headers=user1_headers)
     assert r.status_code == 200
 
-    r = requests.post(TEST_URL + 'folders/' + folder_id + '/create-picture',  files=sample_picture_2, headers=user1_headers)
+    r = requests.post(TEST_URL + 'folder/' + folder_id + '/create-picture',  files=sample_picture_2, headers=user1_headers)
     assert r.status_code == 200
 
-    r = requests.post(TEST_URL + 'folders/' + folder_id + '/create-picture',  files=sample_picture_3, headers=user1_headers)
+    r = requests.post(TEST_URL + 'folder/' + folder_id + '/create-picture',  files=sample_picture_3, headers=user1_headers)
     assert r.status_code == 200
 
 
 def test_get_pictures(some_folder_id, user1_headers):
     folder_id = str(some_folder_id)
 
-    r = requests.get(TEST_URL + 'folders/' + folder_id + '/pictures', headers=user1_headers, params={'offset': 0, 'limit': 1})
+    r = requests.get(TEST_URL + 'folder/' + folder_id + '/pictures', headers=user1_headers, params={'offset': 0, 'limit': 1})
     assert r.status_code == 200
     print(r.json())
     assert len(r.json()['pictures']) == 1
 
-    r = requests.get(TEST_URL + 'folders/' + folder_id + '/pictures', headers=user1_headers, params={'offset': 1, 'limit': 1})
+    r = requests.get(TEST_URL + 'folder/' + folder_id + '/pictures', headers=user1_headers, params={'offset': 1, 'limit': 1})
     assert r.status_code == 200
     assert len(r.json()['pictures']) == 1
 
-    r = requests.get(TEST_URL + 'folders/' + folder_id + '/pictures', headers=user1_headers, params={'offset': 0, 'limit': 4})
+    r = requests.get(TEST_URL + 'folder/' + folder_id + '/pictures', headers=user1_headers, params={'offset': 0, 'limit': 4})
     assert r.status_code == 200
     assert len(r.json()['pictures']) == 3
 
-    r = requests.get(TEST_URL + 'folders/' + folder_id + '/pictures', headers=user1_headers, params={'offset': 10, 'limit': 5})
+    r = requests.get(TEST_URL + 'folder/' + folder_id + '/pictures', headers=user1_headers, params={'offset': 10, 'limit': 5})
     assert r.status_code == 200
     assert len(r.json()['pictures']) == 0
 
 def test_update_picture(some_folder_id, user1_headers, user2_headers):
     folder_id = str(some_folder_id)
 
-    r = requests.get(TEST_URL + 'folders/' + folder_id + '/pictures', headers=user1_headers, params={'offset': 0, 'limit': 1})
+    r = requests.get(TEST_URL + 'folder/' + folder_id + '/pictures', headers=user1_headers, params={'offset': 0, 'limit': 1})
     assert r.status_code == 200
     picture_id = str(r.json()['pictures'][0]['id'])
 
-    r = requests.post(TEST_URL + 'picture/' + picture_id + "/update", 
+    r = requests.put(TEST_URL + 'picture/' + picture_id + "/update", 
         json={'title': 'title 1', 'description': 'description 1' }, 
         headers=user2_headers
     )
     assert r.status_code == 403
 
-    r = requests.post(
+    r = requests.put(
         TEST_URL + 'picture/' + picture_id + "/update", 
         json={'title': 'title 1', 'description': 'description 1' }, 
         headers=user1_headers
@@ -129,7 +129,7 @@ def test_update_picture(some_folder_id, user1_headers, user2_headers):
 def test_delete_picture(some_folder_id, user1_headers, user2_headers, sample_picture_1):
     folder_id = str(some_folder_id)
 
-    r = requests.post(TEST_URL + 'folders/' + folder_id + '/create-picture', files=sample_picture_1, headers=user1_headers)
+    r = requests.post(TEST_URL + 'folder/' + folder_id + '/create-picture', files=sample_picture_1, headers=user1_headers)
     assert r.status_code == 200
     print(r.text)
     picture_id = str(r.json()['id'])
