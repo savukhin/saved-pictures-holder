@@ -35,3 +35,17 @@ func GetPictures(db *sqlx.DB, folder_id int, offset int, limit int) ([]Picture, 
 
 	return pictures, err
 }
+
+func GetPictureByID(db *sqlx.DB, id int) (Picture, error) {
+	picture := Picture{}
+
+	err := db.Get(&picture, "SELECT * FROM pictures WHERE id = $1", id)
+
+	return picture, err
+}
+
+func (p *Picture) UpdatePicture(db *sqlx.DB) error {
+	_, err := db.Exec("UPDATE pictures SET title = $1, description = $2, updated_at = now()  WHERE id = $3", p.Title, p.Description, p.ID)
+
+	return err
+}

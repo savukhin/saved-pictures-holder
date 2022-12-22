@@ -95,3 +95,32 @@ def test_get_pictures(some_folder_id, user1_headers):
     r = requests.get(TEST_URL + 'folders/' + folder_id + '/pictures', headers=user1_headers, params={'offset': 10, 'limit': 5})
     assert r.status_code == 200
     assert len(r.json()['pictures']) == 0
+
+def test_update_picture(some_folder_id, user1_headers, user2_headers):
+    folder_id = str(some_folder_id)
+
+    r = requests.get(TEST_URL + 'folders/' + folder_id + '/pictures', headers=user1_headers, params={'offset': 0, 'limit': 1})
+    assert r.status_code == 200
+    picture_id = str(r.json()['pictures'][0]['id'])
+
+    r = requests.post(TEST_URL + 'picture/' + picture_id + "/update", 
+        json={'title': 'title 1', 'description': 'description 1' }, 
+        headers=user2_headers
+    )
+    assert r.status_code == 403
+
+    r = requests.post(
+        TEST_URL + 'picture/' + picture_id + "/update", 
+        json={'title': 'title 1', 'description': 'description 1' }, 
+        headers=user1_headers
+    )
+    assert r.status_code == 200
+
+    r = requests.get(TEST_URL + 'picture/' + picture_id, headers=user2_headers)
+    assert r.status_code == 403
+
+    r = requests.get(TEST_URL + 'picture/' + picture_id, headers=user1_headers)
+    print(r.text)
+    assert r.status_code == 200
+    assert r.json()['title'] == 'title 1'
+    assert r.json()['description'] == 'description 1'

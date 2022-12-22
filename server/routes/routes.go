@@ -48,5 +48,8 @@ func SetupRouter(db *sqlx.DB) *gin.Engine {
 	r.POST("/v1/api/folders/:id/create-picture/", middleware.AuthRequired(db), controllers.CreatePicture(db))
 	r.GET("/v1/api/folders/:id/pictures/", middleware.AuthRequired(db), controllers.GetPictures(db)) // Params: offset, limit
 
+	r.GET("/v1/api/picture/:id", middleware.AuthRequired(db), controllers.GetPictureInfo(db))
+	r.POST("/v1/api/picture/:id/update", middleware.AuthRequired(db), controllers.UpdatePicture(db))
+
 	return r
 }

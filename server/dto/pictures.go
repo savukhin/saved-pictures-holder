@@ -8,9 +8,11 @@ type CreatePictureQuery struct {
 }
 
 type CompressedPicture struct {
-	ID       int    `json:"id"`
-	FolderID int    `json:"folder_id"`
-	Url      string `json:"url"`
+	ID          int    `json:"id"`
+	FolderID    int    `json:"folder_id"`
+	Title       string `json:"title"`
+	Description string `json:"description"`
+	Url         string `json:"url"`
 }
 
 type GetPicturesResponse struct {
@@ -19,4 +21,9 @@ type GetPicturesResponse struct {
 	Offset   int                 `json:"offset"`
 	Limit    int                 `json:"limit"`
 	Message  string              `json:"message"`
+}
+
+type PictureUpdateQuery struct {
+	Title       string `form:"title"`
+	Description string `form:"description"`
 }
