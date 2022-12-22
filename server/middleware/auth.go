@@ -13,7 +13,7 @@ func AuthRequired(db *sqlx.DB) gin.HandlerFunc {
 		protected_query := &dto.TokenHeader{}
 
 		if err := c.ShouldBindHeader(&protected_query); err != nil {
-			c.JSON(404, gin.H{
+			c.JSON(403, gin.H{
 				"message": err.Error(),
 			})
 			return
@@ -22,7 +22,7 @@ func AuthRequired(db *sqlx.DB) gin.HandlerFunc {
 		user, err := utils.GetUserByJWT(db, protected_query.Token)
 
 		if err != nil {
-			c.JSON(404, gin.H{
+			c.JSON(403, gin.H{
 				"message": err.Error(),
 			})
 			return

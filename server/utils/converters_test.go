@@ -15,9 +15,10 @@ func TestConvertToMap(t *testing.T) {
 		Username: "someusername",
 	}
 
-	var testCompressedUserConverted = ConvertToMap(testCompressedUser)
+	testCompressedUserConverted, err := ConvertToMap(testCompressedUser)
 
-	assert.Equal(t, map[string]interface{}{"ID": 1, "Username": "someusername"}, testCompressedUserConverted)
+	assert.Nil(t, err)
+	assert.Equal(t, map[string]interface{}{"id": float64(1), "username": "someusername"}, testCompressedUserConverted)
 }
 
 func TestA(t *testing.T) {

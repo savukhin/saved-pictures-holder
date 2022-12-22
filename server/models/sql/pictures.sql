@@ -3,8 +3,8 @@ CREATE TABLE IF NOT EXISTS "pictures" (
     "user_id" INTEGER NOT NULL,
     "title" VARCHAR(255),
     "description" VARCHAR(255),
-    "url" VARCHAR(255) NOT NULL,
-    "folder_id" INTEGER,
+    "folder_id" INTEGER NOT NULL,
+    "file_name" VARCHAR(255) NOT NULL,
 
     "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
